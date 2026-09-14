@@ -15,6 +15,5 @@ pub fn greet(name: &str) {
 
 #[wasm_bindgen(start)]
 fn run() -> Result<(), JsValue> {
-  greet("WebAssembly");
   Ok(())
 }

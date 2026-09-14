@@ -3,11 +3,10 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 
 import '@picocss/pico'
+import '../index.css'
 
 createRoot(document.querySelector('body')).render(
   <StrictMode>
-    <main className="container">
-      <App />
-    </main>
+    <App />
   </StrictMode>,
 )
