@@ -55,7 +55,7 @@ function App() {
             <img src={fileSrc} onLoad={handleImageLoad} style={{ maxHeight: "100vh" }} />
           </figure>
 
-          <hr />
+          <h2>Seam Target</h2>
           <label htmlFor="width-slider">
             Width ({sliderWidth}px)
             <input
