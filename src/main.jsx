@@ -1,10 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
 import App from './App.jsx'
 
-createRoot(document.getElementById('root')).render(
+import '@picocss/pico'
+
+createRoot(document.querySelector('body')).render(
   <StrictMode>
-    <App />
+    <main className="container">
+      <App />
+    </main>
   </StrictMode>,
 )
