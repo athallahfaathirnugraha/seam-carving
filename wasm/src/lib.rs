@@ -9,8 +9,7 @@ pub fn seam_carve(
   target_width: usize,
   target_height: usize,
 ) -> Vec<u8> {
-  console::log_1(&JsValue::from_str("hi"));
-  vec![]
+  bytes
 }
 
 #[wasm_bindgen(start)]

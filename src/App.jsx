@@ -36,6 +36,8 @@ function App() {
   const [sliderWidth, setSliderWidth] = useState(0)
   const [sliderHeight, setSliderHeight] = useState(0)
 
+  const img = useRef(null)
+
   return <>
     <header className="container">
       <h1>Seam Carving</h1>
@@ -54,7 +56,7 @@ function App() {
         fileSrc !== null &&
         <>
           <figure>
-            <img src={fileSrc} onLoad={handleImageLoad} style={{ maxHeight: "100vh" }} />
+            <img src={fileSrc} onLoad={handleImageLoad} style={{ maxHeight: "100vh" }} ref={img} />
           </figure>
 
           <h2>Seam Target</h2>
@@ -91,7 +93,14 @@ function App() {
 
           <input type="submit" value="Carve" onClick={() => {
             while (!wasmAvailable) {}
-            seam_carve([], imgWidth, imgHeight, sliderWidth, sliderHeight)
+
+            const canvas = new OffscreenCanvas(imgWidth, imgHeight)
+            const context = canvas.getContext("2d")
+            context.drawImage(img.current, 0, 0, imgWidth, imgHeight)
+
+            const imageData = context.getImageData(0, 0, imgWidth, imgHeight).data
+            
+            console.log(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight))
           }} />
         </>
       }
