@@ -3,11 +3,11 @@ import { useState, useEffect, useRef } from 'react'
 import init, { seam_carve } from '../wasm/pkg/wasm.js'
 
 function App() {
-  let wasmAvailable = false
+  let [wasmAvailable, setWasmAvailable] = useState(false)
   
   useEffect(() => {
     init().then(() => {
-      wasmAvailable = true
+      setWasmAvailable(true)
     })
   }, [])
 
@@ -90,6 +90,7 @@ function App() {
           </div>
 
           <input type="submit" value="Carve" onClick={() => {
+            while (!wasmAvailable) {}
             seam_carve([], imgWidth, imgHeight, sliderWidth, sliderHeight)
           }} />
         </>
