@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import init from '../wasm/pkg/wasm.js'
+import init, { seam_carve } from '../wasm/pkg/wasm.js'
 
 function App() {
   let wasmAvailable = false
@@ -89,7 +89,9 @@ function App() {
             </div>
           </div>
 
-          <input type="submit" value="Carve" />
+          <input type="submit" value="Carve" onClick={() => {
+            seam_carve([], imgWidth, imgHeight, sliderWidth, sliderHeight)
+          }} />
         </>
       }
     </main>
