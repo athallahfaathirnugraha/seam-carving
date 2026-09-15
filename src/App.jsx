@@ -38,6 +38,8 @@ function App() {
 
   const img = useRef(null)
 
+  const carvedCanvasRef = useRef(null)
+
   return <>
     <header className="container">
       <h1>Seam Carving</h1>
@@ -91,17 +93,35 @@ function App() {
             </div>
           </div>
 
-          <input type="submit" value="Carve" onClick={() => {
+          <input type="submit" value="Carve" onClick={async () => {
             while (!wasmAvailable) {}
 
             const canvas = new OffscreenCanvas(imgWidth, imgHeight)
-            const context = canvas.getContext("2d")
+            const context = canvas.getContext('2d')
             context.drawImage(img.current, 0, 0, imgWidth, imgHeight)
 
             const imageData = context.getImageData(0, 0, imgWidth, imgHeight).data
             
-            console.log(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight))
+            const carvedImageData = new ImageData(
+              new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight)),
+              imgWidth,
+              imgHeight
+            )
+
+            const carvedImageBitmap = await createImageBitmap(
+              carvedImageData,
+              0,
+              0,
+              imgWidth,
+              imgHeight
+            )
+
+            const carvedContext = carvedCanvasRef.current.getContext('2d')
+            carvedContext.drawImage(carvedImageBitmap, 0, 0, sliderWidth, sliderHeight)
           }} />
+
+          <hr />
+          <canvas width={sliderWidth} height={sliderHeight} ref={carvedCanvasRef}></canvas>
         </>
       }
     </main>
