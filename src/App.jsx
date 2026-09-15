@@ -59,7 +59,7 @@ function App() {
 
           <h2>Seam Target</h2>
 
-          <div class="grid">
+          <div className="grid">
             <div>
               <label htmlFor="width-slider">
                 Width ({sliderWidth}px)
