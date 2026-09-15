@@ -24,6 +24,8 @@ function App() {
   const [imgHeight, setImgHeight] = useState(0)
 
   function handleImageLoad(e) {
+    console.log('image load')
+    
     setImgWidth(e.target.naturalWidth)
     setImgHeight(e.target.naturalHeight)
 
@@ -62,7 +64,7 @@ function App() {
               type="range"
               min="0"
               max={imgWidth}
-              defaultValue={imgWidth}
+              value={sliderWidth}
               name="width-slider"
               onChange={e => setSliderWidth(e.target.value)}
             />
@@ -73,7 +75,7 @@ function App() {
               type="range"
               min="0"
               max={imgHeight}
-              defaultValue={imgHeight}
+              value={sliderHeight}
               name="height-slider"
               onChange={e => setSliderHeight(e.target.value)}
             />
