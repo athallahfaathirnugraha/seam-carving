@@ -24,8 +24,6 @@ function App() {
   const [imgHeight, setImgHeight] = useState(0)
 
   function handleImageLoad(e) {
-    console.log('image load')
-    
     setImgWidth(e.target.naturalWidth)
     setImgHeight(e.target.naturalHeight)
 
@@ -39,6 +37,14 @@ function App() {
   const img = useRef(null)
 
   const carvedCanvasRef = useRef(null)
+  const [carvedImageBitmap, setCarvedImageBitmap] = useState(null)
+
+  useEffect(() => {
+    if (carvedCanvasRef.current) {
+      const ctx = carvedCanvasRef.current.getContext('2d')
+      ctx.drawImage(carvedImageBitmap, 0, 0, sliderWidth, sliderHeight)
+    }
+  }, [carvedImageBitmap])
 
   return <>
     <header className="container">
@@ -108,20 +114,22 @@ function App() {
               imgHeight
             )
 
-            const carvedImageBitmap = await createImageBitmap(
+            setCarvedImageBitmap(await createImageBitmap(
               carvedImageData,
               0,
               0,
               imgWidth,
               imgHeight
-            )
-
-            const carvedContext = carvedCanvasRef.current.getContext('2d')
-            carvedContext.drawImage(carvedImageBitmap, 0, 0, sliderWidth, sliderHeight)
+            ))
           }} />
 
-          <hr />
-          <canvas width={sliderWidth} height={sliderHeight} ref={carvedCanvasRef}></canvas>
+          {
+            carvedImageBitmap !== null &&
+            <>
+              <hr />
+              <canvas width={sliderWidth} height={sliderHeight} ref={carvedCanvasRef}></canvas>
+            </>
+          }
         </>
       }
     </main>
