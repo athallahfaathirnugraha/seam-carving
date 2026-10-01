@@ -41,8 +41,11 @@ function App() {
 
   useEffect(() => {
     if (carvedCanvasRef.current) {
+      carvedCanvasRef.current.width = carvedImageBitmap.width
+      carvedCanvasRef.current.height = carvedImageBitmap.height
+
       const ctx = carvedCanvasRef.current.getContext('2d')
-      ctx.drawImage(carvedImageBitmap, 0, 0, sliderWidth, sliderHeight)
+      ctx.drawImage(carvedImageBitmap, 0, 0, carvedImageBitmap.width, carvedImageBitmap.height)
     }
   }, [carvedImageBitmap])
 
@@ -107,19 +110,20 @@ function App() {
             context.drawImage(img.current, 0, 0, imgWidth, imgHeight)
 
             const imageData = context.getImageData(0, 0, imgWidth, imgHeight).data
+
+            console.log(imageData.length)
+            const arr =
+              new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight))
+            console.log(arr)
             
-            const carvedImageData = new ImageData(
-              new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight)),
-              imgWidth,
-              imgHeight
-            )
+            const carvedImageData = new ImageData(arr, imgHeight, imgWidth)
 
             setCarvedImageBitmap(await createImageBitmap(
               carvedImageData,
               0,
               0,
-              imgWidth,
-              imgHeight
+              carvedImageData.width,
+              carvedImageData.height
             ))
           }} />
 
@@ -127,7 +131,7 @@ function App() {
             carvedImageBitmap !== null &&
             <>
               <hr />
-              <canvas width={sliderWidth} height={sliderHeight} ref={carvedCanvasRef}></canvas>
+              <canvas ref={carvedCanvasRef}></canvas>
             </>
           }
         </>
