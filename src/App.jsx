@@ -111,10 +111,8 @@ function App() {
 
             const imageData = context.getImageData(0, 0, imgWidth, imgHeight).data
 
-            console.log(imageData.length)
             const arr =
               new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight))
-            console.log(arr)
             
             const carvedImageData = new ImageData(arr, imgHeight, imgWidth)
 
