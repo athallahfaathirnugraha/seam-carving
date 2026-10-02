@@ -1,0 +1,2 @@
+cd core
+wasm-pack build --target web --out-dir ../pkg
