@@ -1,4 +1,4 @@
-use core::image_intensity;
+use brain::image_intensity;
 
 pub fn add(left: u64, right: u64) -> u64 {
   left + right

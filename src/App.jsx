@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-import init, { seam_carve } from '../core/pkg/core.js'
+import init, { seam_carve } from '../core/pkg/interface.js'
 
 function App() {
   let [coreAvailable, setCoreAvailable] = useState(false)

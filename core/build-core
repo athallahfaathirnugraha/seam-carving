@@ -1,2 +1,2 @@
-cd core
+cd interface
 wasm-pack build --target web --out-dir ../pkg
