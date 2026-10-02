@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 
-import init, { seam_carve } from '../wasm/pkg/wasm.js'
+import init, { seam_carve } from '../core/pkg/core.js'
 
 function App() {
-  let [wasmAvailable, setWasmAvailable] = useState(false)
+  let [coreAvailable, setCoreAvailable] = useState(false)
   
   useEffect(() => {
     init().then(() => {
-      setWasmAvailable(true)
+      setCoreAvailable(true)
     })
   }, [])
 
@@ -103,7 +103,7 @@ function App() {
           </div>
 
           <input type="submit" value="Carve" onClick={async () => {
-            while (!wasmAvailable) {}
+            while (!coreAvailable) {}
 
             const canvas = new OffscreenCanvas(imgWidth, imgHeight)
             const context = canvas.getContext('2d')
