@@ -1,6 +1,6 @@
 use std::env;
 
-use brain::pixel_intensity;
+use brain::to_intensity_img;
 use image::ImageReader;
 
 fn main() {
@@ -13,14 +13,11 @@ fn main() {
     .decode()
     .expect("Cannot decode file");
 
-  let mut processed_img = img.clone().into_rgba8();
-
-  for pixel in processed_img.pixels_mut() {
-    let intensity = pixel_intensity(pixel.0);
-    pixel.0 = [intensity as u8; 4];
-  }
+  let processed_img = to_intensity_img(img.into_rgba8());
 
   processed_img
     .save("converted.png")
     .expect("Cannot save image");
+
+  println!("Wrote to converted.png");
 }
