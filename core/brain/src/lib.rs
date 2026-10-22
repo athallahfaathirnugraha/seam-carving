@@ -2,6 +2,13 @@ use image::{ImageBuffer, Rgba};
 
 type Pixel = [u8; 4];
 
+pub fn convolute(
+  mut img: ImageBuffer<Rgba<u8>, Vec<u8>>,
+  kernel: [f64; 9],
+) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+  todo!()
+}
+
 pub fn to_intensity_img(mut img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
   for pixel in img.pixels_mut() {
     let intensity = pixel_intensity(pixel.0);
