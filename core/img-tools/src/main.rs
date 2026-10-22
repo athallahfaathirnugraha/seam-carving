@@ -1,6 +1,6 @@
 use std::env;
 
-use brain::{convolute, to_intensity_img};
+use brain::{convolute, float_img_to_img, to_intensity_img};
 use image::{DynamicImage, ImageReader};
 
 fn open_img(path: String) -> DynamicImage {
@@ -33,10 +33,10 @@ fn edge(args: Vec<String>) {
 
   let img = open_img(path);
 
-  let processed_img = convolute(
+  let processed_img = float_img_to_img(convolute(
     img.into_rgba8(),
     [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0],
-  );
+  ));
 
   processed_img
     .save("converted.png")
