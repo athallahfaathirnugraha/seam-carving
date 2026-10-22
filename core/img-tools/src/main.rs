@@ -27,7 +27,7 @@ fn intensity(args: Vec<String>) {
   println!("Wrote to converted.png");
 }
 
-fn detect_edge(args: Vec<String>) {
+fn edge(args: Vec<String>) {
   let path = args[0].clone();
   println!("Opening '{}'", path);
 
@@ -51,7 +51,7 @@ fn main() {
 
   match args[1].as_str() {
     "intensity" => intensity(passed_args),
-    "detect-edge" => detect_edge(passed_args),
+    "edge" => edge(passed_args),
     arg => println!("argument {arg} not known"),
   }
 }
