@@ -3,9 +3,8 @@ use std::env;
 use brain::to_intensity_img;
 use image::ImageReader;
 
-fn main() {
-  let args: Vec<String> = env::args().collect();
-  let path = args[1].clone();
+fn intensity(args: Vec<String>) {
+  let path = args[0].clone();
   println!("Opening '{}'", path);
 
   let img = ImageReader::open(path)
@@ -20,4 +19,14 @@ fn main() {
     .expect("Cannot save image");
 
   println!("Wrote to converted.png");
+}
+
+fn main() {
+  let args: Vec<String> = env::args().collect();
+  let passed_args = args.iter().skip(2).map(|s| s.clone()).collect();
+
+  match args[1].as_str() {
+    "intensity" => intensity(passed_args),
+    arg => println!("argument {arg} not known"),
+  }
 }
