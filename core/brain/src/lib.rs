@@ -8,8 +8,62 @@ pub struct FloatImg {
   pub height: u32,
 }
 
-pub fn float_img_to_img(float_img: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
-  todo!()
+pub fn float_img_to_img(mut float_img: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+  let mut min = f64::INFINITY;
+  let mut max = -f64::INFINITY;
+
+  for pixel in &float_img.data {
+    if pixel[0] < min {
+      min = pixel[0];
+    }
+
+    if pixel[1] < min {
+      min = pixel[1];
+    }
+
+    if pixel[2] < min {
+      min = pixel[2];
+    }
+
+    if pixel[0] > max {
+      max = pixel[0];
+    }
+
+    if pixel[1] > max {
+      max = pixel[1];
+    }
+
+    if pixel[2] > max {
+      max = pixel[2];
+    }
+  }
+
+  dbg!(min);
+  dbg!(max);
+
+  for pixel in &mut float_img.data {
+    let normalized = [
+      (pixel[0] - min) / (max - min) * 255.0,
+      (pixel[1] - min) / (max - min) * 255.0,
+      (pixel[2] - min) / (max - min) * 255.0,
+    ];
+
+    *pixel = normalized;
+  }
+
+  let mut u8_vec = vec![];
+
+  for pixel in &float_img.data {
+    u8_vec.push(pixel[0] as u8);
+    u8_vec.push(pixel[1] as u8);
+    u8_vec.push(pixel[2] as u8);
+    u8_vec.push(255);
+  }
+
+  let img_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> =
+    ImageBuffer::from_vec(float_img.width, float_img.height, u8_vec).unwrap();
+
+  img_buffer
 }
 
 pub fn convolute(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 9]) -> FloatImg {
