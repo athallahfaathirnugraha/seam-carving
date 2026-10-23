@@ -35,7 +35,7 @@ fn edge(args: Vec<String>) {
 
   let processed_img = float_img_to_img(convolute(
     img.into_rgba8(),
-    [0.0, -0.0, 0.0, -0.0, 1.0, -0.0, 0.0, -0.0, 0.0],
+    [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0],
   ));
 
   processed_img
