@@ -9,6 +9,9 @@ pub struct FloatImg {
 }
 
 pub fn float_img_to_img(mut float_img: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+  dbg!(float_img.width);
+  dbg!(float_img.height);
+
   let mut min = f64::INFINITY;
   let mut max = -f64::INFINITY;
 
@@ -60,8 +63,14 @@ pub fn float_img_to_img(mut float_img: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8
     u8_vec.push(255);
   }
 
+  dbg!(u8_vec.len());
+  dbg!(float_img.width * float_img.height * 4);
+
   let img_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> =
     ImageBuffer::from_vec(float_img.width, float_img.height, u8_vec).unwrap();
+
+  dbg!(img_buffer.width());
+  dbg!(img_buffer.height());
 
   img_buffer
 }
