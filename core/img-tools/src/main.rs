@@ -8,6 +8,12 @@ struct ImgProcessor {
 }
 
 impl ImgProcessor {
+  pub fn new(
+    processor: Box<dyn Fn(ImageBuffer<Rgba<u8>, Vec<u8>>) -> ImageBuffer<Rgba<u8>, Vec<u8>>>,
+  ) -> ImgProcessor {
+    ImgProcessor { processor }
+  }
+
   pub fn process(&self, args: Vec<String>) {
     let path = args[0].clone();
     println!("Opening '{}'", path);
@@ -29,17 +35,13 @@ impl ImgProcessor {
 
 fn main() {
   let img_processors = [
-    ImgProcessor {
-      processor: Box::new(|img| {
-        convolute(img, [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0]).normalized()
-      }),
-    },
-    ImgProcessor {
-      processor: Box::new(|img| to_intensity_img(img)),
-    },
-    ImgProcessor {
-      processor: Box::new(|img| convolute_3x1(img, [-1.0, 0.0, 1.0]).clamped()),
-    },
+    ImgProcessor::new(Box::new(|img| {
+      convolute(img, [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0]).normalized()
+    })),
+    ImgProcessor::new(Box::new(|img| to_intensity_img(img))),
+    ImgProcessor::new(Box::new(|img| {
+      convolute_3x1(img, [-1.0, 0.0, 1.0]).clamped()
+    })),
   ];
 
   let args: Vec<String> = env::args().collect();
