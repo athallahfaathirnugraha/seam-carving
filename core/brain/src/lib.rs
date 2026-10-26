@@ -1,6 +1,23 @@
 use image::{ImageBuffer, Rgba};
 
-type Pixel = [u8; 4];
+pub type Pixel = [u8; 4];
+
+pub struct Seam {
+  positions: Vec<usize>,
+  k: usize,
+}
+
+impl Seam {
+  pub fn new(positions: Vec<usize>, k: usize) -> Result<Seam, String> {
+    for i in 1..positions.len() {
+      if positions[i].abs_diff(positions[i - 1]) > k {
+        return Err("invalid k".to_string());
+      }
+    }
+
+    Ok(Seam { positions, k })
+  }
+}
 
 pub struct FloatImg {
   pub data: Vec<[f64; 3]>,
