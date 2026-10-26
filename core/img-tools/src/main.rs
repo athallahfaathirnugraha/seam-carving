@@ -68,6 +68,7 @@ fn main() {
   match args[1].as_str() {
     "intensity" => intensity(passed_args),
     "edge" => edge(passed_args),
+    "y-gradient" => y_gradient(passed_args),
     arg => println!("argument {arg} not known"),
   }
 }
