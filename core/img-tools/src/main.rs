@@ -1,6 +1,6 @@
 use std::env;
 
-use brain::{convolute, float_img_to_img, to_intensity_img};
+use brain::{convolute, convolute_3x1, float_img_to_img, to_intensity_img};
 use image::{DynamicImage, ImageReader};
 
 fn open_img(path: String) -> DynamicImage {
@@ -10,6 +10,21 @@ fn open_img(path: String) -> DynamicImage {
     .expect("Cannot decode file");
 
   img
+}
+
+fn y_gradient(args: Vec<String>) {
+  let path = args[0].clone();
+  println!("Opening '{}'", path);
+
+  let img = open_img(path);
+
+  let processed_img = float_img_to_img(convolute_3x1(img.into_rgba8(), [-1.0, 0.0, 1.0]));
+
+  processed_img
+    .save("converted.png")
+    .expect("Cannot save image");
+
+  println!("Wrote to converted.png");
 }
 
 fn intensity(args: Vec<String>) {
