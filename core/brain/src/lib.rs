@@ -84,9 +84,6 @@ impl FloatImg {
       max = 255.0;
     }
 
-    dbg!(min);
-    dbg!(max);
-
     for pixel in &mut self.data {
       let normalized = [
         (pixel[0] - min) / (max - min) * 255.0,
