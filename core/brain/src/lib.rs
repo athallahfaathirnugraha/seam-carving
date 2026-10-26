@@ -165,7 +165,7 @@ impl FloatImg {
   }
 }
 
-pub fn convolute_3x1(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
+pub fn convolute_3x1(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 
   for y in 1..img.height() - 1 {
@@ -187,7 +187,7 @@ pub fn convolute_3x1(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> F
   }
 }
 
-pub fn convolute_1x3(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
+pub fn convolute_1x3(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 
   for y in 0..img.height() {
@@ -209,7 +209,7 @@ pub fn convolute_1x3(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> F
   }
 }
 
-pub fn convolute(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 9]) -> FloatImg {
+pub fn convolute(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 9]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 
   for y in 1..img.height() - 1 {

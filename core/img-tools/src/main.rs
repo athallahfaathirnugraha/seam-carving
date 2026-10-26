@@ -1,6 +1,6 @@
 use std::env;
 
-use brain::{convolute, convolute_1x3, convolute_3x1, to_intensity_img};
+use brain::{FloatImg, convolute, convolute_1x3, convolute_3x1, to_intensity_img};
 use image::{ImageBuffer, ImageReader, Rgba};
 
 struct ImgProcessor {
@@ -42,7 +42,7 @@ fn main() {
   let img_processors = [
     ImgProcessor::new(
       Box::new(|img| {
-        convolute(img, [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0]).normalized()
+        convolute(&img, [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0]).normalized()
       }),
       "edge.png".to_string(),
     ),
@@ -51,12 +51,23 @@ fn main() {
       "intensity.png".to_string(),
     ),
     ImgProcessor::new(
-      Box::new(|img| convolute_1x3(img, [-1.0, 0.0, 1.0]).clamped()),
+      Box::new(|img| convolute_1x3(&img, [-1.0, 0.0, 1.0]).clamped()),
       "x-gradient.png".to_string(),
     ),
     ImgProcessor::new(
-      Box::new(|img| convolute_3x1(img, [-1.0, 0.0, 1.0]).clamped()),
+      Box::new(|img| convolute_3x1(&img, [-1.0, 0.0, 1.0]).clamped()),
       "y-gradient.png".to_string(),
+    ),
+    ImgProcessor::new(
+      Box::new(|img| {
+        FloatImg::add(
+          &convolute_3x1(&img, [-1.0, 0.0, 1.0]),
+          &convolute_1x3(&img, [-1.0, 0.0, 1.0]),
+        )
+        .unwrap()
+        .normalized_255()
+      }),
+      "xy-gradient.png".to_string(),
     ),
   ];
 
@@ -68,6 +79,7 @@ fn main() {
     "edge" => &img_processors[0],
     "x-gradient" => &img_processors[2],
     "y-gradient" => &img_processors[3],
+    "xy-gradient" => &img_processors[4],
     arg => {
       println!("argument {arg} not known");
       return;
