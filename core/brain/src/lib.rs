@@ -29,6 +29,22 @@ impl FloatImg {
     })
   }
 
+  pub fn abs(self: &FloatImg) -> FloatImg {
+    let mut data = self.data.clone();
+
+    for pixel in &mut data {
+      pixel[0] = pixel[0].abs();
+      pixel[1] = pixel[1].abs();
+      pixel[2] = pixel[2].abs();
+    }
+
+    FloatImg {
+      data,
+      width: self.width,
+      height: self.height,
+    }
+  }
+
   pub fn clamped(self: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
     let mut u8_vec = vec![];
 
