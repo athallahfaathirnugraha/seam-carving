@@ -51,11 +51,11 @@ fn main() {
       "intensity.png".to_string(),
     ),
     ImgProcessor::new(
-      Box::new(|img| convolute_1x3(&img, [-1.0, 0.0, 1.0]).clamped()),
+      Box::new(|img| convolute_1x3(&img, [-1.0, 0.0, 1.0]).normalized_255()),
       "x-gradient.png".to_string(),
     ),
     ImgProcessor::new(
-      Box::new(|img| convolute_3x1(&img, [-1.0, 0.0, 1.0]).clamped()),
+      Box::new(|img| convolute_3x1(&img, [-1.0, 0.0, 1.0]).normalized_255()),
       "y-gradient.png".to_string(),
     ),
     ImgProcessor::new(
