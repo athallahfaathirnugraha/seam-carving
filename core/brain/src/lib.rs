@@ -25,6 +25,70 @@ impl FloatImg {
     img_buffer
   }
 
+  /// Normalized, but the min is never bigger than 0 and the max is never less than 255
+  pub fn normalized_255(mut self: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+    let mut min = f64::INFINITY;
+    let mut max = -f64::INFINITY;
+
+    for pixel in &self.data {
+      if pixel[0] < min {
+        min = pixel[0];
+      }
+
+      if pixel[1] < min {
+        min = pixel[1];
+      }
+
+      if pixel[2] < min {
+        min = pixel[2];
+      }
+
+      if pixel[0] > max {
+        max = pixel[0];
+      }
+
+      if pixel[1] > max {
+        max = pixel[1];
+      }
+
+      if pixel[2] > max {
+        max = pixel[2];
+      }
+    }
+
+    if min > 0.0 {
+      min = 0.0;
+    }
+
+    if max < 255.0 {
+      max = 255.0;
+    }
+
+    for pixel in &mut self.data {
+      let normalized = [
+        (pixel[0] - min) / (max - min) * 255.0,
+        (pixel[1] - min) / (max - min) * 255.0,
+        (pixel[2] - min) / (max - min) * 255.0,
+      ];
+
+      *pixel = normalized;
+    }
+
+    let mut u8_vec = vec![];
+
+    for pixel in &self.data {
+      u8_vec.push(pixel[0] as u8);
+      u8_vec.push(pixel[1] as u8);
+      u8_vec.push(pixel[2] as u8);
+      u8_vec.push(255);
+    }
+
+    let img_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> =
+      ImageBuffer::from_vec(self.width, self.height, u8_vec).unwrap();
+
+    img_buffer
+  }
+
   pub fn normalized(mut self: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
     let mut min = f64::INFINITY;
     let mut max = -f64::INFINITY;
