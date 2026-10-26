@@ -2,6 +2,11 @@ use image::{ImageBuffer, Rgba};
 
 pub type Pixel = [u8; 4];
 
+pub enum Direction {
+  Horizontal,
+  Vertical,
+}
+
 pub struct Seam {
   mapping: Vec<usize>,
   k: usize,
@@ -16,6 +21,20 @@ impl Seam {
     }
 
     Ok(Seam { mapping, k })
+  }
+
+  pub fn cost(&self, energy: FloatImg, direction: Direction) -> Result<f64, String> {
+    match direction {
+      Direction::Horizontal => todo!(),
+      Direction::Vertical => {
+        if self.mapping.len() != energy.height as usize {
+          return Err("mapping size is not equal to image height".to_string());
+        }
+
+        let mut sum = 0.0;
+        todo!()
+      }
+    }
   }
 }
 
