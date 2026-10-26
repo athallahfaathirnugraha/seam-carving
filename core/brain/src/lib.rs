@@ -3,19 +3,19 @@ use image::{ImageBuffer, Rgba};
 pub type Pixel = [u8; 4];
 
 pub struct Seam {
-  positions: Vec<usize>,
+  mapping: Vec<usize>,
   k: usize,
 }
 
 impl Seam {
-  pub fn new(positions: Vec<usize>, k: usize) -> Result<Seam, String> {
-    for i in 1..positions.len() {
-      if positions[i].abs_diff(positions[i - 1]) > k {
+  pub fn new(mapping: Vec<usize>, k: usize) -> Result<Seam, String> {
+    for i in 1..mapping.len() {
+      if mapping[i].abs_diff(mapping[i - 1]) > k {
         return Err("invalid k".to_string());
       }
     }
 
-    Ok(Seam { positions, k })
+    Ok(Seam { mapping, k })
   }
 }
 
