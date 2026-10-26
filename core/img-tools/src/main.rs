@@ -1,6 +1,6 @@
 use std::env;
 
-use brain::{convolute, convolute_3x1, float_img_to_img, to_intensity_img};
+use brain::{convolute, convolute_3x1, to_intensity_img};
 use image::{DynamicImage, ImageReader};
 
 fn open_img(path: String) -> DynamicImage {
@@ -18,7 +18,7 @@ fn y_gradient(args: Vec<String>) {
 
   let img = open_img(path);
 
-  let processed_img = float_img_to_img(convolute_3x1(img.into_rgba8(), [-1.0, 0.0, 1.0]));
+  let processed_img = convolute_3x1(img.into_rgba8(), [-1.0, 0.0, 1.0]).normalized();
 
   processed_img
     .save("converted.png")
@@ -48,10 +48,11 @@ fn edge(args: Vec<String>) {
 
   let img = open_img(path);
 
-  let processed_img = float_img_to_img(convolute(
+  let processed_img = convolute(
     img.into_rgba8(),
     [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0],
-  ));
+  )
+  .normalized();
 
   processed_img
     .save("converted.png")
