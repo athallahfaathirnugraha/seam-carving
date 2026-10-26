@@ -9,6 +9,22 @@ pub struct FloatImg {
 }
 
 impl FloatImg {
+  pub fn clamped(self: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+    let mut u8_vec = vec![];
+
+    for pixel in &self.data {
+      u8_vec.push(pixel[0] as u8);
+      u8_vec.push(pixel[1] as u8);
+      u8_vec.push(pixel[2] as u8);
+      u8_vec.push(255);
+    }
+
+    let img_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> =
+      ImageBuffer::from_vec(self.width, self.height, u8_vec).unwrap();
+
+    img_buffer
+  }
+
   pub fn normalized(mut self: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
     let mut min = f64::INFINITY;
     let mut max = -f64::INFINITY;

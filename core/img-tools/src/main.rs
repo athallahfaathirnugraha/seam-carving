@@ -18,7 +18,7 @@ fn y_gradient(args: Vec<String>) {
 
   let img = open_img(path);
 
-  let processed_img = convolute_3x1(img.into_rgba8(), [-1.0, 0.0, 1.0]).normalized();
+  let processed_img = convolute_3x1(img.into_rgba8(), [-1.0, 0.0, 1.0]).clamped();
 
   processed_img
     .save("converted.png")
