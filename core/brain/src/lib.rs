@@ -9,6 +9,26 @@ pub struct FloatImg {
 }
 
 impl FloatImg {
+  pub fn add(a: &FloatImg, b: &FloatImg) -> Result<FloatImg, String> {
+    if a.width != b.width || a.height != b.height {
+      return Err("a and b have different dimensions".to_string());
+    }
+
+    let mut data = vec![[0.0; 3]; a.data.len()];
+
+    for i in 0..a.data.len() {
+      data[i][0] = a.data[i][0] + b.data[i][0];
+      data[i][1] = a.data[i][1] + b.data[i][1];
+      data[i][2] = a.data[i][2] + b.data[i][2];
+    }
+
+    Ok(FloatImg {
+      data,
+      width: a.width,
+      height: a.height,
+    })
+  }
+
   pub fn clamped(self: FloatImg) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
     let mut u8_vec = vec![];
 
