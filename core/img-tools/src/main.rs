@@ -1,6 +1,6 @@
 use std::env;
 
-use brain::{convolute, convolute_3x1, to_intensity_img};
+use brain::{convolute, convolute_1x3, convolute_3x1, to_intensity_img};
 use image::{ImageBuffer, ImageReader, Rgba};
 
 struct ImgProcessor {
@@ -51,6 +51,10 @@ fn main() {
       "intensity.png".to_string(),
     ),
     ImgProcessor::new(
+      Box::new(|img| convolute_1x3(img, [-1.0, 0.0, 1.0]).clamped()),
+      "x-gradient.png".to_string(),
+    ),
+    ImgProcessor::new(
       Box::new(|img| convolute_3x1(img, [-1.0, 0.0, 1.0]).clamped()),
       "y-gradient.png".to_string(),
     ),
@@ -62,7 +66,8 @@ fn main() {
   let img_processor = match args[1].as_str() {
     "intensity" => &img_processors[1],
     "edge" => &img_processors[0],
-    "y-gradient" => &img_processors[2],
+    "x-gradient" => &img_processors[2],
+    "y-gradient" => &img_processors[3],
     arg => {
       println!("argument {arg} not known");
       return;

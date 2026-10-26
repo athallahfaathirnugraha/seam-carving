@@ -103,6 +103,28 @@ pub fn convolute_3x1(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> F
   }
 }
 
+pub fn convolute_1x3(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
+  let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
+
+  for y in 0..img.height() {
+    for x in 1..img.width() - 1 {
+      let pixel_index = (y * img.width() + x) as usize;
+
+      for i in 0..3 {
+        copy[pixel_index][i] += img[(x - 1, y)].0[i] as f64 * kernel[0];
+        copy[pixel_index][i] += img[(x + 0, y)].0[i] as f64 * kernel[1];
+        copy[pixel_index][i] += img[(x + 1, y)].0[i] as f64 * kernel[2];
+      }
+    }
+  }
+
+  FloatImg {
+    data: copy,
+    width: img.width(),
+    height: img.height(),
+  }
+}
+
 pub fn convolute(img: ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 9]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 
