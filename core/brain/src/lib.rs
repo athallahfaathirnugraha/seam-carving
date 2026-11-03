@@ -23,11 +23,7 @@ impl Seam {
     Ok(Seam { mapping })
   }
 
-  pub fn cost(
-    &self,
-    energy: FloatImg, /* TODO: Use EnergyImg */
-    direction: Direction,
-  ) -> Result<f64, String> {
+  pub fn cost(&self, energy: EnergyImg, direction: Direction) -> Result<f64, String> {
     match direction {
       Direction::Horizontal => todo!(),
       Direction::Vertical => {
@@ -39,7 +35,7 @@ impl Seam {
 
         for y in 0..self.mapping.len() {
           let x = self.mapping[y];
-          sum += energy.get(x, y)[0]; // maybe make a type that stores images which pixels are f64 instead of [f64; 3]
+          sum += energy.get(x, y);
         }
 
         Ok(sum)
