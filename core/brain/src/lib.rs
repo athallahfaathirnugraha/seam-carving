@@ -44,6 +44,80 @@ impl Seam {
   }
 }
 
+pub struct EnergyImg {
+  pub data: Vec<f64>,
+  pub width: u32,
+  pub height: u32,
+}
+
+impl EnergyImg {
+  pub fn from_float_img(float_img: FloatImg) -> EnergyImg {
+    EnergyImg {
+      data: float_img.data.into_iter().map(|x| x[0]).collect(),
+      width: float_img.width,
+      height: float_img.height,
+    }
+  }
+
+  pub fn abs(self: &EnergyImg) -> EnergyImg {
+    let mut data = self.data.clone();
+
+    for pixel in &mut data {
+      *pixel = pixel.abs();
+    }
+
+    EnergyImg {
+      data,
+      width: self.width,
+      height: self.height,
+    }
+  }
+
+  /// Normalized, but the min is never bigger than 0 and the max is never less than 255
+  pub fn normalized_255(mut self) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+    let mut min = f64::INFINITY;
+    let mut max = -f64::INFINITY;
+
+    for pixel in &self.data {
+      if *pixel < min {
+        min = *pixel;
+      }
+
+      if *pixel > max {
+        max = *pixel;
+      }
+    }
+
+    if min > 0.0 {
+      min = 0.0;
+    }
+
+    if max < 255.0 {
+      max = 255.0;
+    }
+
+    for pixel in &mut self.data {
+      let normalized = (*pixel - min) / (max - min) * 255.0;
+
+      *pixel = normalized;
+    }
+
+    let mut u8_vec = vec![];
+
+    for pixel in &self.data {
+      u8_vec.push(*pixel as u8);
+      u8_vec.push(*pixel as u8);
+      u8_vec.push(*pixel as u8);
+      u8_vec.push(255);
+    }
+
+    let img_buffer: ImageBuffer<Rgba<u8>, Vec<u8>> =
+      ImageBuffer::from_vec(self.width, self.height, u8_vec).unwrap();
+
+    img_buffer
+  }
+}
+
 pub struct FloatImg {
   pub data: Vec<[f64; 3]>,
   pub width: u32,
@@ -271,14 +345,16 @@ pub fn convolute_1x3(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> 
   }
 }
 
-pub fn gradient_magnitude(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> FloatImg {
+pub fn gradient_magnitude(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> EnergyImg {
   let intensity_img = to_intensity_img(img);
 
-  FloatImg::add(
-    &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]),
-    &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]),
+  EnergyImg::from_float_img(
+    FloatImg::add(
+      &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]),
+      &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]),
+    )
+    .unwrap(),
   )
-  .unwrap()
 }
 
 pub fn convolute(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 9]) -> FloatImg {
