@@ -261,6 +261,16 @@ pub fn convolute_1x3(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> 
   }
 }
 
+pub fn gradient_magnitude(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> FloatImg {
+  let intensity_img = to_intensity_img(img);
+
+  FloatImg::add(
+    &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]),
+    &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]),
+  )
+  .unwrap()
+}
+
 pub fn convolute(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 9]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 

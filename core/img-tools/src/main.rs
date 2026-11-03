@@ -1,6 +1,8 @@
 use std::env;
 
-use brain::{FloatImg, convolute, convolute_1x3, convolute_3x1, to_intensity_img};
+use brain::{
+  FloatImg, convolute, convolute_1x3, convolute_3x1, gradient_magnitude, to_intensity_img,
+};
 use image::{ImageBuffer, ImageReader, Rgba};
 
 struct ImgProcessor {
@@ -82,17 +84,7 @@ fn main() {
       "abs-xy-gradient.png".to_string(),
     ),
     ImgProcessor::new(
-      Box::new(|img| {
-        let intensity_img = to_intensity_img(img);
-
-        FloatImg::add(
-          &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]),
-          &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]),
-        )
-        .unwrap()
-        .abs()
-        .normalized_255()
-      }),
+      Box::new(|img| gradient_magnitude(img).abs().normalized_255()),
       "gradient-magnitude.png".to_string(),
     ),
   ];
