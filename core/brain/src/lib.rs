@@ -21,6 +21,18 @@ pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
   minimal_cost_seam
 }
 
+pub fn draw_seam(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, seam: Seam, direction: Direction) {
+  match direction {
+    Direction::Horizontal => todo!(),
+    Direction::Vertical => {
+      for y in 0..img.height() {
+        let x = seam.mapping[y as usize];
+        img[(x as u32, y as u32)] = Rgba::<u8>([255, 0, 0, 255]);
+      }
+    }
+  }
+}
+
 pub fn convolute_3x1(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 
