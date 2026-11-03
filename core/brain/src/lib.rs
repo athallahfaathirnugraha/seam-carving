@@ -90,46 +90,63 @@ impl EnergyImg {
   }
 
   pub fn cumulative_minimum_energy(&self, direction: Direction) -> EnergyImg {
-    fn M(x: u32, y: u32, energy: &EnergyImg, img: &mut EnergyImg, direction: Direction) -> f64 {
-      match direction {
-        Direction::Horizontal => todo!(),
-        Direction::Vertical => {
-          if y == 0 {
-            energy.get(x as usize, y as usize)
-          } else {
-            energy.get(x as usize, y as usize)
-              + f64::min(
-                if x > 0 {
-                  M(x - 1, y - 1, energy, img, direction)
-                } else {
-                  0.0
-                },
-                f64::min(
-                  M(x, y - 1, energy, img, direction),
-                  if x < energy.width - 1 {
-                    M(x + 1, y - 1, energy, img, direction)
+    fn M(
+      x: u32,
+      y: u32,
+      energy: &EnergyImg,
+      cache: &mut Vec<Option<f64>>,
+      direction: Direction,
+    ) -> f64 {
+      if let Some(value) = cache[(y * energy.width + x) as usize] {
+        value
+      } else {
+        match direction {
+          Direction::Horizontal => todo!(),
+          Direction::Vertical => {
+            let value = if y == 0 {
+              energy.get(x as usize, y as usize)
+            } else {
+              energy.get(x as usize, y as usize)
+                + f64::min(
+                  if x > 0 {
+                    M(x - 1, y - 1, energy, cache, direction)
                   } else {
                     0.0
                   },
-                ),
-              )
+                  f64::min(
+                    M(x, y - 1, energy, cache, direction),
+                    if x < energy.width - 1 {
+                      M(x + 1, y - 1, energy, cache, direction)
+                    } else {
+                      0.0
+                    },
+                  ),
+                )
+            };
+
+            cache[(y * energy.width + x) as usize] = Some(value);
+            value
           }
         }
       }
     }
 
-    let mut img = EnergyImg::empty(self.width, self.height);
+    let mut cache = vec![None; (self.width * self.height) as usize];
 
     match direction {
       Direction::Horizontal => todo!(),
       Direction::Vertical => {
         for y in 1..self.height {
           for x in 0..self.width {
-            img.data[(y * self.width + x) as usize] = M(x, y, self, &mut img, direction);
+            M(x, y, self, &mut cache, direction);
           }
         }
 
-        img
+        EnergyImg {
+          data: cache.into_iter().map(|x| x.unwrap()).collect(),
+          width: self.width,
+          height: self.height,
+        }
       }
     }
   }
