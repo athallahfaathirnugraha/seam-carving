@@ -85,6 +85,38 @@ impl EnergyImg {
     }
   }
 
+  /// `self` is the cumulative minimum energy image.
+  pub fn minimal_cost_seam(&self) -> Seam {
+    let mut mapping = vec![0; self.height as usize];
+
+    let mut min_index = 0;
+
+    for i in 1..self.width {
+      if self.get(i as usize, (self.height - 1) as usize)
+        < self.get(min_index, (self.height - 1) as usize)
+      {
+        min_index = i as usize;
+      }
+    }
+
+    mapping[(self.height - 1) as usize] = min_index;
+
+    for y in (0..self.height - 1).rev() {
+      let middle = mapping[(y + 1) as usize];
+      let mut min_index = 0;
+
+      for i in middle - 1..=middle + 1 {
+        if self.get(i as usize, y as usize) < self.get(min_index, y as usize) {
+          min_index = i as usize;
+        }
+      }
+
+      mapping[y as usize] = min_index;
+    }
+
+    Seam { mapping }
+  }
+
   pub fn cumulative_minimum_energy(&self, direction: Direction) -> EnergyImg {
     fn M(
       x: u32,
