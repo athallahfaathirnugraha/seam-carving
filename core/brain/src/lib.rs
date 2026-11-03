@@ -411,6 +411,13 @@ impl FloatImg {
   }
 }
 
+pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
+  let energy_img = gradient_magnitude(img);
+  let cumulative_energy_img = energy_img.cumulative_minimum_energy(Direction::Vertical);
+  let minimal_cost_seam = cumulative_energy_img.minimal_cost_seam();
+  minimal_cost_seam
+}
+
 pub fn convolute_3x1(img: &ImageBuffer<Rgba<u8>, Vec<u8>>, kernel: [f64; 3]) -> FloatImg {
   let mut copy = vec![[0.0; 3]; (img.width() * img.height()) as usize];
 
