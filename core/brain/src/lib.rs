@@ -94,14 +94,18 @@ impl EnergyImg {
       match direction {
         Direction::Horizontal => todo!(),
         Direction::Vertical => {
-          energy.get(x as usize, y as usize)
-            + f64::min(
-              M(x - 1, y + 1, energy, direction),
-              f64::min(
-                M(x, y + 1, energy, direction),
-                M(x + 1, y + 1, energy, direction),
-              ),
-            )
+          if y == energy.height - 1 {
+            energy.get(x as usize, y as usize)
+          } else {
+            energy.get(x as usize, y as usize)
+              + f64::min(
+                M(x - 1, y + 1, energy, direction),
+                f64::min(
+                  M(x, y + 1, energy, direction),
+                  M(x + 1, y + 1, energy, direction),
+                ),
+              )
+          }
         }
       }
     }
