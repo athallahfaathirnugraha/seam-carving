@@ -81,6 +81,20 @@ fn main() {
       }),
       "abs-xy-gradient.png".to_string(),
     ),
+    ImgProcessor::new(
+      Box::new(|img| {
+        let intensity_img = to_intensity_img(img);
+
+        FloatImg::add(
+          &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]),
+          &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]),
+        )
+        .unwrap()
+        .abs()
+        .normalized_255()
+      }),
+      "gradient-magnitude.png".to_string(),
+    ),
   ];
 
   let args: Vec<String> = env::args().collect();
@@ -93,6 +107,7 @@ fn main() {
     "y-gradient" => &img_processors[3],
     "xy-gradient" => &img_processors[4],
     "abs-xy-gradient" => &img_processors[5],
+    "gradient-magnitude" => &img_processors[6],
     arg => {
       println!("argument {arg} not known");
       return;
