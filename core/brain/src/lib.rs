@@ -10,18 +10,17 @@ pub enum Direction {
 
 pub struct Seam {
   mapping: Vec<usize>,
-  k: usize,
 }
 
 impl Seam {
-  pub fn new(mapping: Vec<usize>, k: usize) -> Result<Seam, String> {
+  pub fn new(mapping: Vec<usize>) -> Result<Seam, String> {
     for i in 1..mapping.len() {
-      if mapping[i].abs_diff(mapping[i - 1]) > k {
+      if mapping[i].abs_diff(mapping[i - 1]) > 1 {
         return Err("invalid k".to_string());
       }
     }
 
-    Ok(Seam { mapping, k })
+    Ok(Seam { mapping })
   }
 
   pub fn cost(
