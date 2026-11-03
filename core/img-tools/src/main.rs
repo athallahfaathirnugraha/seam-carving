@@ -1,7 +1,7 @@
 use std::env;
 
 use brain::{
-  Direction, FloatImg, convolute, convolute_1x3, convolute_3x1, gradient_magnitude,
+  Direction, convolute, convolute_1x3, convolute_3x1, float_img::FloatImg, gradient_magnitude,
   to_intensity_img,
 };
 use image::{ImageBuffer, ImageReader, Rgba};
