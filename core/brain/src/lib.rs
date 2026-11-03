@@ -32,7 +32,13 @@ impl Seam {
         }
 
         let mut sum = 0.0;
-        todo!()
+
+        for y in 0..self.mapping.len() {
+          let x = self.mapping[y];
+          sum += energy.get(x, y)[0]; // maybe make a type that stores images which pixels are f64 instead of [f64; 3]
+        }
+
+        Ok(sum)
       }
     }
   }
@@ -45,6 +51,10 @@ pub struct FloatImg {
 }
 
 impl FloatImg {
+  pub fn get(&self, x: usize, y: usize) -> [f64; 3] {
+    self.data[y * self.width as usize + x]
+  }
+
   pub fn add(a: &FloatImg, b: &FloatImg) -> Result<FloatImg, String> {
     if a.width != b.width || a.height != b.height {
       return Err("a and b have different dimensions".to_string());
