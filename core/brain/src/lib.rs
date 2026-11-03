@@ -99,10 +99,18 @@ impl EnergyImg {
           } else {
             energy.get(x as usize, y as usize)
               + f64::min(
-                M(x - 1, y + 1, energy, direction),
+                if x > 0 {
+                  M(x - 1, y + 1, energy, direction)
+                } else {
+                  0.0
+                },
                 f64::min(
                   M(x, y + 1, energy, direction),
-                  M(x + 1, y + 1, energy, direction),
+                  if x < energy.width - 1 {
+                    M(x + 1, y + 1, energy, direction)
+                  } else {
+                    0.0
+                  },
                 ),
               )
           }
