@@ -2,6 +2,7 @@ use image::{ImageBuffer, Rgba};
 
 pub type Pixel = [u8; 4];
 
+#[derive(Copy, Clone)]
 pub enum Direction {
   Horizontal,
   Vertical,
@@ -23,7 +24,11 @@ impl Seam {
     Ok(Seam { mapping, k })
   }
 
-  pub fn cost(&self, energy: FloatImg, direction: Direction) -> Result<f64, String> {
+  pub fn cost(
+    &self,
+    energy: FloatImg, /* TODO: Use EnergyImg */
+    direction: Direction,
+  ) -> Result<f64, String> {
     match direction {
       Direction::Horizontal => todo!(),
       Direction::Vertical => {
@@ -51,6 +56,18 @@ pub struct EnergyImg {
 }
 
 impl EnergyImg {
+  pub fn empty(width: u32, height: u32) -> EnergyImg {
+    EnergyImg {
+      data: vec![0.0; (width * height) as usize],
+      width,
+      height,
+    }
+  }
+
+  pub fn get(&self, x: usize, y: usize) -> f64 {
+    self.data[y * self.width as usize + x]
+  }
+
   pub fn from_float_img(float_img: FloatImg) -> EnergyImg {
     EnergyImg {
       data: float_img.data.into_iter().map(|x| x[0]).collect(),
@@ -59,7 +76,7 @@ impl EnergyImg {
     }
   }
 
-  pub fn abs(self: &EnergyImg) -> EnergyImg {
+  pub fn abs(&self) -> EnergyImg {
     let mut data = self.data.clone();
 
     for pixel in &mut data {
@@ -70,6 +87,39 @@ impl EnergyImg {
       data,
       width: self.width,
       height: self.height,
+    }
+  }
+
+  pub fn cumulative_minimum_energy(&self, direction: Direction) -> EnergyImg {
+    fn M(x: u32, y: u32, energy: &EnergyImg, direction: Direction) -> f64 {
+      match direction {
+        Direction::Horizontal => todo!(),
+        Direction::Vertical => {
+          energy.get(x as usize, y as usize)
+            + f64::min(
+              M(x - 1, y + 1, energy, direction),
+              f64::min(
+                M(x, y + 1, energy, direction),
+                M(x + 1, y + 1, energy, direction),
+              ),
+            )
+        }
+      }
+    }
+
+    let mut img = EnergyImg::empty(self.width, self.height);
+
+    match direction {
+      Direction::Horizontal => todo!(),
+      Direction::Vertical => {
+        for y in 1..self.height {
+          for x in 0..self.width {
+            img.data[(y * self.width + x) as usize] = M(x, y, self, direction);
+          }
+        }
+
+        img
+      }
     }
   }
 
