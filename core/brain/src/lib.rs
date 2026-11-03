@@ -125,7 +125,7 @@ impl EnergyImg {
       Direction::Vertical => {
         for y in 1..self.height {
           for x in 0..self.width {
-            img.data[(y * self.width + x) as usize] = M(x, y, self, direction);
+            img.data[(y * self.width + x) as usize] = M(x, y, self, &mut img, direction);
           }
         }
 
