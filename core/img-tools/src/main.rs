@@ -1,8 +1,8 @@
 use std::env;
 
 use brain::{
-  Direction, convolute, convolute_1x3, convolute_3x1, float_img::FloatImg, gradient_magnitude,
-  to_intensity_img,
+  Direction, convolute, convolute_1x3, convolute_3x1, draw_seam, float_img::FloatImg,
+  gradient_magnitude, img_minimal_cost_seam, to_intensity_img,
 };
 use image::{ImageBuffer, ImageReader, Rgba};
 
@@ -96,6 +96,14 @@ fn main() {
       }),
       "cumulative-minimum-energy.png".to_string(),
     ),
+    ImgProcessor::new(
+      Box::new(|mut img| {
+        let seam = img_minimal_cost_seam(img.clone());
+        draw_seam(&mut img, seam, Direction::Vertical);
+        img
+      }),
+      "minimal-cost-seam.png".to_string(),
+    ),
   ];
 
   let args: Vec<String> = env::args().collect();
@@ -110,6 +118,7 @@ fn main() {
     "abs-xy-gradient" => &img_processors[5],
     "gradient-magnitude" => &img_processors[6],
     "cumulative-minimum-energy" => &img_processors[7],
+    "minimal-cost-seam" => &img_processors[8],
     arg => {
       println!("argument {arg} not known");
       return;
