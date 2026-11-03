@@ -1,7 +1,8 @@
 use std::env;
 
 use brain::{
-  FloatImg, convolute, convolute_1x3, convolute_3x1, gradient_magnitude, to_intensity_img,
+  Direction, FloatImg, convolute, convolute_1x3, convolute_3x1, gradient_magnitude,
+  to_intensity_img,
 };
 use image::{ImageBuffer, ImageReader, Rgba};
 
@@ -87,6 +88,14 @@ fn main() {
       Box::new(|img| gradient_magnitude(img).abs().normalized_255()),
       "gradient-magnitude.png".to_string(),
     ),
+    ImgProcessor::new(
+      Box::new(|img| {
+        gradient_magnitude(img)
+          .cumulative_minimum_energy(Direction::Vertical)
+          .normalized_255()
+      }),
+      "cumulative-minimum-energy.png".to_string(),
+    ),
   ];
 
   let args: Vec<String> = env::args().collect();
@@ -100,6 +109,7 @@ fn main() {
     "xy-gradient" => &img_processors[4],
     "abs-xy-gradient" => &img_processors[5],
     "gradient-magnitude" => &img_processors[6],
+    "cumulative-minimum-energy" => &img_processors[7],
     arg => {
       println!("argument {arg} not known");
       return;
