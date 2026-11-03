@@ -90,24 +90,24 @@ impl EnergyImg {
   }
 
   pub fn cumulative_minimum_energy(&self, direction: Direction) -> EnergyImg {
-    fn M(x: u32, y: u32, energy: &EnergyImg, direction: Direction) -> f64 {
+    fn M(x: u32, y: u32, energy: &EnergyImg, img: &mut EnergyImg, direction: Direction) -> f64 {
       match direction {
         Direction::Horizontal => todo!(),
         Direction::Vertical => {
-          if y == energy.height - 1 {
+          if y == 0 {
             energy.get(x as usize, y as usize)
           } else {
             energy.get(x as usize, y as usize)
               + f64::min(
                 if x > 0 {
-                  M(x - 1, y + 1, energy, direction)
+                  M(x - 1, y - 1, energy, img, direction)
                 } else {
                   0.0
                 },
                 f64::min(
-                  M(x, y + 1, energy, direction),
+                  M(x, y - 1, energy, img, direction),
                   if x < energy.width - 1 {
-                    M(x + 1, y + 1, energy, direction)
+                    M(x + 1, y - 1, energy, img, direction)
                   } else {
                     0.0
                   },
