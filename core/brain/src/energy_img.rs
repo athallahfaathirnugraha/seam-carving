@@ -76,7 +76,7 @@ impl EnergyImg {
       mapping[y as usize] = min_index;
     }
 
-    Seam { mapping }
+    Seam::new(mapping).unwrap()
   }
 
   pub fn cumulative_minimum_energy(&self, direction: Direction) -> EnergyImg {

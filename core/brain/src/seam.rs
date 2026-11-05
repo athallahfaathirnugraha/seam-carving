@@ -1,7 +1,7 @@
 use crate::{Direction, EnergyImg};
 
 pub struct Seam {
-  pub(crate) mapping: Vec<usize>,
+  mapping: Vec<usize>,
 }
 
 impl Seam {
@@ -13,6 +13,10 @@ impl Seam {
     }
 
     Ok(Seam { mapping })
+  }
+
+  pub fn mapping(&self) -> &Vec<usize> {
+    &self.mapping
   }
 
   pub fn cost(&self, energy: EnergyImg, direction: Direction) -> Result<f64, String> {

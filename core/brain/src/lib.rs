@@ -26,7 +26,7 @@ pub fn draw_seam(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, seam: Seam, direction
     Direction::Horizontal => todo!(),
     Direction::Vertical => {
       for y in 0..img.height() {
-        let x = seam.mapping[y as usize];
+        let x = seam.mapping()[y as usize];
         img[(x as u32, y as u32)] = Rgba::<u8>([255, 0, 0, 255]);
       }
     }
