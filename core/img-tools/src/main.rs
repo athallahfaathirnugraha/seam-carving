@@ -2,7 +2,7 @@ use std::io;
 
 use brain::{
   Direction, convolute, convolute_1x3, convolute_3x1, draw_seam, float_img::FloatImg,
-  gradient_magnitude, img_minimal_cost_seam, to_intensity_img,
+  gradient_magnitude, img_minimal_cost_seam, remove_seam, to_intensity_img,
 };
 
 use image::ImageReader;
@@ -83,20 +83,26 @@ fn main() -> Result<(), String> {
 
   match args.subcommand {
     SeamSteps => {
-      if let Err(err) = std::fs::create_dir("seam-steps") {
-        let err: io::Error = err.downcast().unwrap();
-
-        match err {
-          _ => {
-            dbg!(err);
-            return Err("unknown error".to_string());
-          }
+      while let Err(err) = std::fs::create_dir("seam-steps") {
+        if err.kind() == io::ErrorKind::AlreadyExists {
+          std::fs::remove_dir_all("seam-steps").unwrap();
+          continue;
+        } else {
+          dbg!(err);
+          return Err("unknown error".to_string());
         }
       }
 
-      for i in 0..img.width() {
-        todo!();
+      for i in 0..img.width() - 1 {
+        let seam = img_minimal_cost_seam(img.clone());
+        draw_seam(&mut img, &seam, Direction::Vertical);
+        img.save(format!("seam-steps/{}.png", i)).unwrap();
+        img = remove_seam(&img, &seam);
       }
+
+      println!("Wrote to seam-steps/");
+
+      return Ok(());
     }
     _ => (),
   }
@@ -125,7 +131,7 @@ fn main() -> Result<(), String> {
       .normalized_255(),
     MinimalCostSeam => {
       let seam = img_minimal_cost_seam(img.clone());
-      draw_seam(&mut img, seam, Direction::Vertical);
+      draw_seam(&mut img, &seam, Direction::Vertical);
       img
     }
     SeamSteps => unreachable!(),

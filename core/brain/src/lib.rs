@@ -42,7 +42,7 @@ pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
   minimal_cost_seam
 }
 
-pub fn draw_seam(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, seam: Seam, direction: Direction) {
+pub fn draw_seam(img: &mut ImageBuffer<Rgba<u8>, Vec<u8>>, seam: &Seam, direction: Direction) {
   match direction {
     Direction::Horizontal => todo!(),
     Direction::Vertical => {
