@@ -125,7 +125,7 @@ fn main() -> Result<(), String> {
     .unwrap()
     .abs()
     .normalized_255(),
-    GradientMagnitude => gradient_magnitude(img).abs().normalized_255(),
+    GradientMagnitude => gradient_magnitude(img).normalized_255(),
     CumulativeMinimumEnergy => gradient_magnitude(img)
       .cumulative_minimum_energy(Direction::Vertical)
       .normalized_255(),

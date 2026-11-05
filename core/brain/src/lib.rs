@@ -103,10 +103,11 @@ pub fn gradient_magnitude(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> EnergyImg {
 
   EnergyImg::from_float_img(
     FloatImg::add(
-      &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]),
-      &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]),
+      &convolute_3x1(&intensity_img, [-1.0, 0.0, 1.0]).squared(),
+      &convolute_1x3(&intensity_img, [-1.0, 0.0, 1.0]).squared(),
     )
-    .unwrap(),
+    .unwrap()
+    .sqrt(),
   )
 }
 

@@ -11,6 +11,38 @@ impl FloatImg {
     self.data[y * self.width as usize + x]
   }
 
+  pub fn sqrt(&self) -> FloatImg {
+    let mut data = vec![[0.0; 3]; self.data.len()];
+
+    for i in 0..self.data.len() {
+      data[i][0] = self.data[i][0].sqrt();
+      data[i][1] = self.data[i][1].sqrt();
+      data[i][2] = self.data[i][2].sqrt();
+    }
+
+    FloatImg {
+      data,
+      width: self.width,
+      height: self.height,
+    }
+  }
+
+  pub fn squared(&self) -> FloatImg {
+    let mut data = vec![[0.0; 3]; self.data.len()];
+
+    for i in 0..self.data.len() {
+      data[i][0] = self.data[i][0] * self.data[i][0];
+      data[i][1] = self.data[i][1] * self.data[i][1];
+      data[i][2] = self.data[i][2] * self.data[i][2];
+    }
+
+    FloatImg {
+      data,
+      width: self.width,
+      height: self.height,
+    }
+  }
+
   pub fn add(a: &FloatImg, b: &FloatImg) -> Result<FloatImg, String> {
     if a.width != b.width || a.height != b.height {
       return Err("a and b have different dimensions".to_string());
