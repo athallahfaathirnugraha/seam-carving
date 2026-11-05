@@ -61,7 +61,7 @@ impl EnergyImg {
 
     for y in (0..self.height - 1).rev() {
       let middle = mapping[(y + 1) as usize] as i32;
-      let mut min_index = 0;
+      let mut min_index = middle as usize;
 
       for i in middle - 1..=middle + 1 {
         if i < 0 || i > (self.width - 1) as i32 {
