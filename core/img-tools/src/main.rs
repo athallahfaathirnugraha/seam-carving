@@ -1,3 +1,5 @@
+use std::io;
+
 use brain::{
   Direction, convolute, convolute_1x3, convolute_3x1, draw_seam, float_img::FloatImg,
   gradient_magnitude, img_minimal_cost_seam, to_intensity_img,
@@ -18,6 +20,7 @@ enum Subcommand {
   GradientMagnitude,
   CumulativeMinimumEnergy,
   MinimalCostSeam,
+  SeamSteps,
 }
 
 impl clap::ValueEnum for Subcommand {
@@ -34,6 +37,7 @@ impl clap::ValueEnum for Subcommand {
       GradientMagnitude,
       CumulativeMinimumEnergy,
       MinimalCostSeam,
+      SeamSteps,
     ]
   }
 
@@ -50,6 +54,7 @@ impl clap::ValueEnum for Subcommand {
       GradientMagnitude => Some(PossibleValue::new("gradient-magnitude")),
       CumulativeMinimumEnergy => Some(PossibleValue::new("cumulative-minimum-energy")),
       MinimalCostSeam => Some(PossibleValue::new("minimal-cost-seam")),
+      SeamSteps => Some(PossibleValue::new("seam-steps")),
     }
   }
 }
@@ -62,7 +67,7 @@ struct Args {
   img_path: String,
 }
 
-fn main() {
+fn main() -> Result<(), String> {
   use Subcommand::*;
 
   let args = Args::parse();
@@ -75,6 +80,26 @@ fn main() {
     .decode()
     .expect("Cannot decode file")
     .into_rgba8();
+
+  match args.subcommand {
+    SeamSteps => {
+      if let Err(err) = std::fs::create_dir("seam-steps") {
+        let err: io::Error = err.downcast().unwrap();
+
+        match err {
+          _ => {
+            dbg!(err);
+            return Err("unknown error".to_string());
+          }
+        }
+      }
+
+      for i in 0..img.width() {
+        todo!();
+      }
+    }
+    _ => (),
+  }
 
   let new_img = match args.subcommand {
     Edge => convolute(&img, [0.0, -1.0, 0.0, -1.0, 4.0, -1.0, 0.0, -1.0, 0.0]).normalized(),
@@ -103,6 +128,7 @@ fn main() {
       draw_seam(&mut img, seam, Direction::Vertical);
       img
     }
+    SeamSteps => unreachable!(),
   };
 
   let save_path = args
@@ -116,4 +142,6 @@ fn main() {
   new_img.save(&save_path).expect("Cannot save image");
 
   println!("Wrote to {}", &save_path);
+
+  Ok(())
 }

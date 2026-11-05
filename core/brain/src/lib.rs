@@ -14,6 +14,27 @@ pub enum Direction {
   Vertical,
 }
 
+pub fn remove_seam(
+  img: &ImageBuffer<Rgba<u8>, Vec<u8>>,
+  seam: &Seam,
+) -> ImageBuffer<Rgba<u8>, Vec<u8>> {
+  let mut new_img: ImageBuffer<Rgba<u8>, Vec<u8>> = ImageBuffer::new(img.width() - 1, img.height());
+
+  for new_y in 0..new_img.height() {
+    for new_x in 0..new_img.width() {
+      let old_x = if new_x >= seam.mapping()[new_y as usize] as u32 {
+        new_x + 1
+      } else {
+        new_x
+      };
+
+      new_img[(new_x, new_y)] = img[(old_x, new_y)];
+    }
+  }
+
+  new_img
+}
+
 pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
   let energy_img = gradient_magnitude(img);
   let cumulative_energy_img = energy_img.cumulative_minimum_energy(Direction::Vertical);
