@@ -4,7 +4,65 @@ use brain::{
   Direction, convolute, convolute_1x3, convolute_3x1, draw_seam, float_img::FloatImg,
   gradient_magnitude, img_minimal_cost_seam, to_intensity_img,
 };
+
 use image::{ImageBuffer, ImageReader, Rgba};
+
+use clap::{Parser, builder::PossibleValue};
+
+#[derive(Debug, Clone)]
+enum Subcommand {
+  Intensity,
+  Edge,
+  XGradient,
+  YGradient,
+  XyGradient,
+  AbsXyGradient,
+  GradientMagnitude,
+  CumulativeMinimumEnergy,
+  MinimalCostSeam,
+}
+
+impl clap::ValueEnum for Subcommand {
+  fn value_variants<'a>() -> &'a [Self] {
+    use Subcommand::*;
+
+    &[
+      Intensity,
+      Edge,
+      XGradient,
+      YGradient,
+      XyGradient,
+      AbsXyGradient,
+      GradientMagnitude,
+      CumulativeMinimumEnergy,
+      MinimalCostSeam,
+    ]
+  }
+
+  fn to_possible_value(&self) -> Option<clap::builder::PossibleValue> {
+    use Subcommand::*;
+
+    match self {
+      Intensity => Some(PossibleValue::new("intensity")),
+      Edge => Some(PossibleValue::new("edge")),
+      XGradient => Some(PossibleValue::new("x-gradient")),
+      YGradient => Some(PossibleValue::new("y-gradient")),
+      XyGradient => Some(PossibleValue::new("xy-gradient")),
+      AbsXyGradient => Some(PossibleValue::new("abs-xy-gradient")),
+      GradientMagnitude => Some(PossibleValue::new("gradient-magnitude")),
+      CumulativeMinimumEnergy => Some(PossibleValue::new("cumulative-minimum-energy")),
+      MinimalCostSeam => Some(PossibleValue::new("minimal-cost-seam")),
+    }
+  }
+}
+
+#[derive(Parser, Debug)]
+struct Args {
+  /// The subcommand to run.
+  subcommand: Subcommand,
+  /// The path of the image to process.
+  img_path: String,
+}
 
 struct ImgProcessor {
   processor: Box<dyn Fn(ImageBuffer<Rgba<u8>, Vec<u8>>) -> ImageBuffer<Rgba<u8>, Vec<u8>>>,
@@ -42,6 +100,9 @@ impl ImgProcessor {
 }
 
 fn main() {
+  let args = Args::parse();
+  dbg!(args);
+
   let img_processors = [
     ImgProcessor::new(
       Box::new(|img| {
