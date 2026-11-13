@@ -1,5 +1,7 @@
 use image::{ImageBuffer, Rgba};
 
+use crate::energy_img::EnergyImg;
+
 pub struct FloatImg {
   pub data: Vec<[f64; 3]>,
   pub width: u32,
@@ -212,5 +214,13 @@ impl FloatImg {
       ImageBuffer::from_vec(self.width, self.height, u8_vec).unwrap();
 
     img_buffer
+  }
+
+  pub fn to_energy_avg(mut self) -> EnergyImg {
+    for data in &mut self.data {
+      data[0] = (data[0] + data[1] + data[2]) / 3.0;
+    }
+
+    EnergyImg::from_float_img(self)
   }
 }
