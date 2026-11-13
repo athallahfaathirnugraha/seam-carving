@@ -101,14 +101,14 @@ impl EnergyImg {
                   if x > 0 {
                     M(x - 1, y - 1, energy, cache, direction)
                   } else {
-                    0.0
+                    f64::INFINITY
                   },
                   f64::min(
                     M(x, y - 1, energy, cache, direction),
                     if x < energy.width - 1 {
                       M(x + 1, y - 1, energy, cache, direction)
                     } else {
-                      0.0
+                      f64::INFINITY
                     },
                   ),
                 )
