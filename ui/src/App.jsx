@@ -111,7 +111,24 @@ function App() {
             carvedImageBitmap !== null &&
             <>
               <hr />
-              <canvas ref={carvedCanvasRef}></canvas>
+              <h2>Carved Image</h2>
+              <figure>
+                <canvas style={{ display: 'block' }} ref={carvedCanvasRef}></canvas>
+              </figure>
+              <button style={{ width: '100%' }} onClick={() => {
+                carvedCanvasRef.current.toBlob(blob => {
+                  const url = URL.createObjectURL(blob)
+
+                  const link = document.createElement('a')
+                  link.href = url
+                  link.download = 'carved.png'
+                  document.body.appendChild(link)
+                  link.click()
+                  document.body.removeChild(link)
+
+                  URL.revokeObjectURL(url)
+                })
+              }}>Download</button>
             </>
           }
         </>

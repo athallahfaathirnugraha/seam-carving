@@ -1,3 +1,5 @@
 figure {
-  margin-bottom: var(--pico-spacing);
+  margin-block: var(--pico-spacing);
+  display: flex;
+  justify-content: center;
 }
