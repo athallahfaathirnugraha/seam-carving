@@ -72,34 +72,18 @@ function App() {
 
           <h2>Seam Target</h2>
 
-          <div className="grid">
-            <div>
-              <label htmlFor="width-slider">
-                Width ({sliderWidth}px)
-                <input
-                  type="range"
-                  min="0"
-                  max={imgWidth}
-                  value={sliderWidth}
-                  name="width-slider"
-                  onChange={e => setSliderWidth(e.target.value)}
-                />
-              </label>
-            </div>
-          
-            <div>
-              <label htmlFor="height-slider">
-                Height ({sliderHeight}px)
-                <input
-                  type="range"
-                  min="0"
-                  max={imgHeight}
-                  value={sliderHeight}
-                  name="height-slider"
-                  onChange={e => setSliderHeight(e.target.value)}
-                />
-              </label>
-            </div>
+          <div>
+            <label htmlFor="width-slider">
+              Target Width
+              <input
+                type="number"
+                min="0"
+                max={imgWidth}
+                value={sliderWidth}
+                name="width-slider"
+                onChange={e => setSliderWidth(e.target.value)}
+              />
+            </label>
           </div>
 
           <input type="submit" value="Carve" onClick={async () => {
