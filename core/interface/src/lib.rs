@@ -1,40 +1,21 @@
+use brain::{img_minimal_cost_seam, remove_seam};
+
+use image::{ImageBuffer, Rgba};
+
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
 #[wasm_bindgen]
 pub fn seam_carve(bytes: Vec<u8>, width: usize, height: usize, target_width: usize) -> Vec<u8> {
-  let mut pixels = vec![];
+  let mut img: ImageBuffer<Rgba<u8>, Vec<u8>> =
+    ImageBuffer::from_vec(width as u32, height as u32, bytes).unwrap();
 
-  assert!(bytes.len() % 4 == 0);
-
-  for i in 0..bytes.len() / 4 {
-    pixels.push([
-      bytes[i * 4],
-      bytes[i * 4 + 1],
-      bytes[i * 4 + 2],
-      bytes[i * 4 + 3],
-    ]);
+  for i in 0..width - target_width {
+    let seam = img_minimal_cost_seam(img.clone());
+    img = remove_seam(&img, &seam);
   }
 
-  let mut rotated_pixels = vec![[0u8; 4]; pixels.len()];
-
-  for i in 0..rotated_pixels.len() {
-    let x = i % width;
-    let y = (i - x) / width;
-
-    rotated_pixels[x * height + (height - 1 - y)] = pixels[i];
-  }
-
-  let mut pure_bytes = vec![];
-
-  for pixel in rotated_pixels {
-    pure_bytes.push(pixel[0]);
-    pure_bytes.push(pixel[1]);
-    pure_bytes.push(pixel[2]);
-    pure_bytes.push(pixel[3]);
-  }
-
-  pure_bytes
+  img.into_vec()
 }
 
 #[wasm_bindgen(start)]

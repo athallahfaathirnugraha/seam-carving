@@ -96,7 +96,7 @@ function App() {
             const arr =
               new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth))
             
-            const carvedImageData = new ImageData(arr, imgHeight, imgWidth)
+            const carvedImageData = new ImageData(arr, sliderWidth, imgHeight)
 
             setCarvedImageBitmap(await createImageBitmap(
               carvedImageData,
