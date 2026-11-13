@@ -36,7 +36,7 @@ pub fn remove_seam(
 }
 
 pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
-  let energy_img = &mut FloatImg::add(
+  let energy_img = FloatImg::add(
     &convolute_3x1(&img, [-1.0, 0.0, 1.0]),
     &convolute_1x3(&img, [-1.0, 0.0, 1.0]),
   )

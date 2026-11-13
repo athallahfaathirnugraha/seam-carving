@@ -21,6 +21,7 @@ enum Subcommand {
   CumulativeMinimumEnergy,
   MinimalCostSeam,
   SeamSteps,
+  E1,
 }
 
 impl clap::ValueEnum for Subcommand {
@@ -38,6 +39,7 @@ impl clap::ValueEnum for Subcommand {
       CumulativeMinimumEnergy,
       MinimalCostSeam,
       SeamSteps,
+      E1,
     ]
   }
 
@@ -55,6 +57,7 @@ impl clap::ValueEnum for Subcommand {
       CumulativeMinimumEnergy => Some(PossibleValue::new("cumulative-minimum-energy")),
       MinimalCostSeam => Some(PossibleValue::new("minimal-cost-seam")),
       SeamSteps => Some(PossibleValue::new("seam-steps")),
+      E1 => Some(PossibleValue::new("e1")),
     }
   }
 }
@@ -134,6 +137,14 @@ fn main() -> Result<(), String> {
       draw_seam(&mut img, &seam, Direction::Vertical);
       img
     }
+    E1 => FloatImg::add(
+      &convolute_3x1(&img, [-1.0, 0.0, 1.0]),
+      &convolute_1x3(&img, [-1.0, 0.0, 1.0]),
+    )
+    .unwrap()
+    .abs()
+    .to_energy_avg()
+    .normalized_255(),
     SeamSteps => unreachable!(),
   };
 
