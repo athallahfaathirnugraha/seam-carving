@@ -28,11 +28,9 @@ function App() {
     setImgHeight(e.target.naturalHeight)
 
     setSliderWidth(e.target.naturalWidth)
-    setSliderHeight(e.target.naturalHeight)
   }
 
   const [sliderWidth, setSliderWidth] = useState(0)
-  const [sliderHeight, setSliderHeight] = useState(0)
 
   const img = useRef(null)
 
@@ -96,7 +94,7 @@ function App() {
             const imageData = context.getImageData(0, 0, imgWidth, imgHeight).data
 
             const arr =
-              new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth, sliderHeight))
+              new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth))
             
             const carvedImageData = new ImageData(arr, imgHeight, imgWidth)
 
