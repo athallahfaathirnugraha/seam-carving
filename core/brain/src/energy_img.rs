@@ -2,6 +2,7 @@ use image::{ImageBuffer, Rgba};
 
 use crate::{Direction, FloatImg, seam::Seam};
 
+#[derive(Debug)]
 pub struct EnergyImg {
   pub data: Vec<f64>,
   pub width: u32,
@@ -41,6 +42,26 @@ impl EnergyImg {
       width: self.width,
       height: self.height,
     }
+  }
+
+  // TODO: Don't allocate a new EnergyImg
+  pub fn remove_seam(&mut self, seam: &Seam) {
+    let mut new_img = EnergyImg::empty(self.width - 1, self.height);
+
+    for new_y in 0..new_img.height {
+      for new_x in 0..new_img.width {
+        let old_x = if new_x >= seam.mapping()[new_y as usize] as u32 {
+          new_x + 1
+        } else {
+          new_x
+        };
+
+        new_img.data[(new_x + new_y * new_img.width) as usize] =
+          self.get(old_x as usize, new_y as usize);
+      }
+    }
+
+    *self = new_img
   }
 
   /// `self` is the cumulative minimum energy image.
@@ -183,5 +204,11 @@ impl EnergyImg {
       ImageBuffer::from_vec(self.width, self.height, u8_vec).unwrap();
 
     img_buffer
+  }
+}
+
+impl PartialEq for EnergyImg {
+  fn eq(&self, other: &Self) -> bool {
+    self.data == other.data && self.width == other.width && self.height == other.height
   }
 }

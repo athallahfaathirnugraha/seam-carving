@@ -17,6 +17,7 @@ pub enum Direction {
   Vertical,
 }
 
+// TODO: Just use &mut ImageBufer<Rgba<u8>, Vec<u8>> instead of returning a new image
 pub fn remove_seam(
   img: &ImageBuffer<Rgba<u8>, Vec<u8>>,
   seam: &Seam,
@@ -38,7 +39,7 @@ pub fn remove_seam(
   new_img
 }
 
-pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
+pub fn e1(img: &ImageBuffer<Rgba<u8>, Vec<u8>>) -> EnergyImg {
   let energy_img = FloatImg::add(
     &convolute_3x1(&img, [-1.0, 0.0, 1.0]),
     &convolute_1x3(&img, [-1.0, 0.0, 1.0]),
@@ -46,6 +47,12 @@ pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
   .unwrap()
   .abs()
   .to_energy_avg();
+
+  energy_img
+}
+
+pub fn img_minimal_cost_seam(img: ImageBuffer<Rgba<u8>, Vec<u8>>) -> Seam {
+  let energy_img = e1(&img);
 
   let cumulative_energy_img = energy_img.cumulative_minimum_energy(Direction::Vertical);
   let minimal_cost_seam = cumulative_energy_img.minimal_cost_seam();

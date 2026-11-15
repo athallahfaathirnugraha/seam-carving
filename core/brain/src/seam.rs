@@ -1,5 +1,6 @@
 use crate::{Direction, EnergyImg};
 
+#[derive(Debug)]
 pub struct Seam {
   mapping: Vec<usize>,
 }
@@ -37,5 +38,11 @@ impl Seam {
         Ok(sum)
       }
     }
+  }
+}
+
+impl PartialEq for Seam {
+  fn eq(&self, other: &Self) -> bool {
+    self.mapping == other.mapping
   }
 }
