@@ -4,6 +4,9 @@ pub mod energy_img;
 pub mod float_img;
 pub mod seam;
 
+#[cfg(test)]
+mod tests;
+
 use crate::{energy_img::EnergyImg, float_img::FloatImg, seam::Seam};
 
 pub type Pixel = [u8; 4];

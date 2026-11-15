@@ -1,3 +1,6 @@
 build:
     cargo build --workspace --exclude interface
     wasm-pack build interface --target web --out-dir ../pkg
+
+test:
+    cargo test --workspace --exclude interface
