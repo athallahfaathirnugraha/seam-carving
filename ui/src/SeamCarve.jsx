@@ -1,7 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 
-import init, { seam_carve } from '../../core/pkg/interface.js'
-
 const worker = new Worker(new URL('./worker.js', import.meta.url), {
   type: 'module'
 })
