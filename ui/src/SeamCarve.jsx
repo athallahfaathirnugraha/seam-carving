@@ -2,15 +2,11 @@ import { useState, useEffect, useRef } from 'react'
 
 import init, { seam_carve } from '../../core/pkg/interface.js'
 
-function SeamCarve() {
-  let [coreAvailable, setCoreAvailable] = useState(false)
-  
-  useEffect(() => {
-    init().then(() => {
-      setCoreAvailable(true)
-    })
-  }, [])
+const worker = new Worker(new URL('./worker.js', import.meta.url), {
+  type: 'module'
+})
 
+function SeamCarve() {
   const [fileSrc, setFileSrc] = useState(null)
 
   function handleFileChange(e) {
@@ -47,6 +43,8 @@ function SeamCarve() {
     }
   }, [carvedImageBitmap])
 
+  const [isLoading, setIsLoading] = useState(false)
+
   return <>
     <input
       type="file"
@@ -81,27 +79,35 @@ function SeamCarve() {
         </div>
 
         <input type="submit" value="Carve" onClick={async () => {
-          while (!coreAvailable) {}
-
           const canvas = new OffscreenCanvas(imgWidth, imgHeight)
           const context = canvas.getContext('2d')
           context.drawImage(img.current, 0, 0, imgWidth, imgHeight)
 
           const imageData = context.getImageData(0, 0, imgWidth, imgHeight).data
 
-          const arr =
-            new Uint8ClampedArray(seam_carve(imageData, imgWidth, imgHeight, sliderWidth))
-          
-          const carvedImageData = new ImageData(arr, sliderWidth, imgHeight)
+          setIsLoading(true)
 
-          setCarvedImageBitmap(await createImageBitmap(
-            carvedImageData,
-            0,
-            0,
-            carvedImageData.width,
-            carvedImageData.height
-          ))
+          worker.postMessage([imageData, imgWidth, imgHeight, sliderWidth])
+
+          worker.onmessage = async e => {
+            const carvedImageData = e.data
+            
+            setCarvedImageBitmap(await createImageBitmap(
+              carvedImageData,
+              0,
+              0,
+              carvedImageData.width,
+              carvedImageData.height
+            ))
+
+            setIsLoading(false)
+          }
         }} />
+
+        {
+          isLoading &&
+          <progress></progress>
+        }
 
         {
           carvedImageBitmap !== null &&
