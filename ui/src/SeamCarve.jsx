@@ -22,6 +22,8 @@ function SeamCarve() {
     setImgHeight(e.target.naturalHeight)
 
     setSliderWidth(e.target.naturalWidth)
+
+    setCarvedImageBitmap(null)
   }
 
   const [sliderWidth, setSliderWidth] = useState(0)
@@ -77,6 +79,8 @@ function SeamCarve() {
         </div>
 
         <input type="submit" value="Carve" onClick={async () => {
+          setCarvedImageBitmap(null)
+          
           const canvas = new OffscreenCanvas(imgWidth, imgHeight)
           const context = canvas.getContext('2d')
           context.drawImage(img.current, 0, 0, imgWidth, imgHeight)
