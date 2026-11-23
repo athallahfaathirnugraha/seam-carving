@@ -1,3 +1,5 @@
+// TODO: Prevent data race if user tried to carve another image while the previous one is still running
+
 import init, { seam_carve } from '../../core/pkg/interface.js'
 
 let available = false
