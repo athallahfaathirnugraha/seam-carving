@@ -10,7 +10,7 @@ pub fn seam_carve(bytes: Vec<u8>, width: usize, height: usize, target_width: usi
   let mut img: ImageBuffer<Rgba<u8>, Vec<u8>> =
     ImageBuffer::from_vec(width as u32, height as u32, bytes).unwrap();
 
-  for i in 0..width - target_width {
+  for _ in 0..width - target_width {
     let seam = img_minimal_cost_seam(img.clone());
     img = remove_seam(&img, &seam);
   }
